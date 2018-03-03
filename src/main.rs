@@ -2,6 +2,11 @@ extern crate alfred;
 #[macro_use]
 extern crate quicli;
 extern crate reqwest;
+extern crate serde;
+extern crate serde_json;
+
+#[macro_use]
+extern crate serde_derive;
 use quicli::prelude::*;
 
 fn make_request(query: &str) -> Result<String> {
