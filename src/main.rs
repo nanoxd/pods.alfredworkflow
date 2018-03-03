@@ -8,13 +8,16 @@ extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
 use quicli::prelude::*;
+use models::{Pod, SearchResponse};
 
-fn make_request(query: &str) -> Result<String> {
+mod models;
+
+fn search_pods(query: &str) -> Result<Vec<Pod>> {
   let url: &str = &format!("https://search.cocoapods.org/api/v1/pods.picky.hash.json?query={}&ids=10&offset=0&sort=quality", query);
-  let response = reqwest::get(url)?.text()?;
+  let mut response: SearchResponse = reqwest::get(url)?.json()?;
+  let pods = response.into_allocation().pods();
 
-  println!("{}", response);
-  Ok(response)
+  Ok(pods)
 }
 
 #[derive(Debug, StructOpt)]
@@ -24,5 +27,7 @@ struct Cli {
 
 main!(|args: Cli| {
   let query = &args.query;
-  make_request(query);
+  let request = search_pods(query)?;
+
+  println!("{:?}", request)
 });
