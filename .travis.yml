@@ -4,5 +4,5 @@ rust:
   - stable
 cache: cargo
 script:
-  - cargo build --verbose --all
+  - cargo build --verbose
   - cargo test --color always
