@@ -29,7 +29,7 @@ fn pod_to_alfred_item(pods: Vec<Pod>, query: &str) -> io::Result<()> {
   let items: Vec<_> = pods
     .into_iter()
     .map(|pod| {
-      ItemBuilder::new(format!("{}", pod.id))
+      ItemBuilder::new(pod.title())
         .text_copy(pod.stanza())
         .arg(pod.url())
         .valid(true)
