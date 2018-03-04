@@ -1,11 +1,11 @@
-all: target/release/alfred-pods
+all: build
 .PHONY: all
 
-target/release/alfred-pods:
+build:
 	cargo build --release
-.PHONY: target/release/alfred-pods
+.PHONY: build
 
-install: target/release/alfred-pods
+install: build
 	./install-workflow.sh target/release/alfred-pods
 .PHONY: install
 
@@ -15,4 +15,10 @@ update-plist:
 
 clean:
 	cargo clean
+	rm -f pods.alfredworkflow
 .PHONY: clean
+
+release: clean build
+	cp target/release/alfred-pods .
+	zip -9 -r pods.alfredworkflow icon.png info.plist alfred-pods
+	rm alfred-pods
