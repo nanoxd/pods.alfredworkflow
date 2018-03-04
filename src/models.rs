@@ -22,14 +22,24 @@ impl Allocation {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Pod {
-  id: String,
-  version: String,
-  summary: String,
-  link: String,
-  source: Source,
+  pub id: String,
+  pub version: String,
+  pub summary: String,
+  pub link: String,
+  pub source: Source,
+}
+
+impl Pod {
+  pub fn url(&self) -> String {
+    format!("https://cocoapods.org/pods/{}", self.id)
+  }
+
+  pub fn stanza(&self) -> String {
+    format!("pod '{}', '~> {}'", self.id, self.version)
+  }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Source {
-  git: String,
+  pub git: String,
 }
