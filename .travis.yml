@@ -1,8 +1,17 @@
 os: osx
 language: rust
-rust: 
-  - stable
+rust:
+- stable
 cache: cargo
 script:
-  - cargo build
-  - cargo test --color always
+- cargo build
+- cargo test --color always
+before_deploy:
+- make release
+deploy:
+  provider: releases
+  api_key:
+    secure: orb8WfC1xfjLxmNhDGBgogSIq3ePqSDhWkdPlKeYHjOI/yEGNy9dD1tca1J/f9dYbvMxvxdTuKZ7qGdHoiTlyJsDmebfY7THFkvyycLXTRWd6L+m71jjsiShOG2r7R1MKorvhVozBY7RRkn6iwuHGXexvC1E3pz7tbdUHHHsuf6RzjFhAJZdcDqICl6IRAKnH1bBnNlfyrlLYmlfD6vVfdd27e6B60R/ZWOjnnuR2sE8ihx73VdhMkuNNb3A8yvXyXXzO3cdV3ResLINhLUBoZzAqY0XAvAJGY4UAQ5h8+dAeUUEGAvC4rE+41uLi500ZWarJ51qx5UIYeNCqwXJp+yYQbaBTMYkDfD9Or3nNYxr/A1ubkCX7T0fA9OTON5hx7Xu5o9vA1wk0yrLePcTN3kt38hsZ85bLj6mCz5UXPMcwC9PO/7QKu9UzK6hoPJUAAD2JhZoqgkai1MoBA4qgoJjzP6nuMF49iwDIiKQS+rBPUYc2NkLvW+XuRmLZjByWqpojaF3xx3tJqtG4uMR9uZqJWTd35+f+s/IihC5T9vaNxHR1RWbqs9Yr75h+xCYTihoDYcnUWf0eUYpPZ53xeF1AiMCq7H+x7sEAFLcUekBmcBSMzUgXVJh7SLBBWT79MToxPq9zNNASulHN+T/xqtx03sMekveGl/epf7h4vk=
+  file: pods.alfredworkflow
+  on:
+    repo: nanoxd/pods.alfredworkflow
