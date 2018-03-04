@@ -9,7 +9,7 @@ extern crate serde_json;
 extern crate serde_derive;
 use quicli::prelude::*;
 use models::{Pod, SearchResponse};
-use alfred::ItemBuilder;
+use alfred::{ItemBuilder, Modifier};
 use std::io;
 
 mod models;
@@ -31,10 +31,8 @@ fn pod_to_alfred_item(pods: Vec<Pod>) -> io::Result<()> {
         .arg(pod.url())
         .valid(true)
         .subtitle(pod.summary)
-        .subtitle_mod(
-          alfred::Modifier::Option,
-          format!("Open Repo: {}", pod.source.git),
-        )
+        .subtitle_mod(Modifier::Option, format!("Open Repo: {}", pod.source.git))
+        .arg_mod(Modifier::Option, pod.source.git)
         .into_item()
     })
     .collect();
