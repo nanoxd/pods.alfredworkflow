@@ -9,6 +9,8 @@ extern crate serde_json;
 extern crate serde_derive;
 use quicli::prelude::*;
 use models::{Pod, SearchResponse};
+use alfred::ItemBuilder;
+use std::io;
 
 mod models;
 
@@ -20,6 +22,26 @@ fn search_pods(query: &str) -> Result<Vec<Pod>> {
   Ok(pods)
 }
 
+fn pod_to_alfred_item(pods: Vec<Pod>) -> io::Result<()> {
+  let items: Vec<_> = pods
+    .into_iter()
+    .map(|pod| {
+      ItemBuilder::new(format!("{}", pod.id))
+        .text_copy(pod.stanza())
+        .arg(pod.url())
+        .valid(true)
+        .subtitle(pod.summary)
+        .subtitle_mod(
+          alfred::Modifier::Option,
+          format!("Open Repo: {}", pod.source.git),
+        )
+        .into_item()
+    })
+    .collect();
+
+  alfred::json::write_items(io::stdout(), &items)
+}
+
 #[derive(Debug, StructOpt)]
 struct Cli {
   query: String,
@@ -28,6 +50,5 @@ struct Cli {
 main!(|args: Cli| {
   let query = &args.query;
   let request = search_pods(query)?;
-
-  println!("{:?}", request)
+  pod_to_alfred_item(request)?
 });
