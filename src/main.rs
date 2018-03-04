@@ -1,10 +1,10 @@
 extern crate alfred;
-#[macro_use]
-extern crate quicli;
 extern crate reqwest;
 extern crate serde;
 extern crate serde_json;
 
+#[macro_use]
+extern crate quicli;
 #[macro_use]
 extern crate serde_derive;
 use quicli::prelude::*;
@@ -17,12 +17,15 @@ mod models;
 fn search_pods(query: &str) -> Result<Vec<Pod>> {
   let url: &str = &format!("https://search.cocoapods.org/api/v1/pods.picky.hash.json?query={}&ids=10&offset=0&sort=quality", query);
   let mut response: SearchResponse = reqwest::get(url)?.json()?;
-  let pods = response.into_allocation().pods();
+  let pods = response.into_allocation();
 
-  Ok(pods)
+  match pods {
+    Some(pods) => Ok(pods.pods()),
+    None => Err(format_err!("Invalid Response")),
+  }
 }
 
-fn pod_to_alfred_item(pods: Vec<Pod>) -> io::Result<()> {
+fn pod_to_alfred_item(pods: Vec<Pod>, query: &str) -> io::Result<()> {
   let items: Vec<_> = pods
     .into_iter()
     .map(|pod| {
@@ -37,7 +40,20 @@ fn pod_to_alfred_item(pods: Vec<Pod>) -> io::Result<()> {
     })
     .collect();
 
-  alfred::json::write_items(io::stdout(), &items)
+  if items.is_empty() {
+    no_items(query)
+  } else {
+    alfred::json::write_items(io::stdout(), &items)
+  }
+}
+
+fn no_items(query: &str) -> io::Result<()> {
+  let item = ItemBuilder::new("No Pods Found")
+    .subtitle("Open CocoaPods Search?")
+    .arg(format!("https://cocoapods.org/?q={}", query))
+    .into_item();
+
+  alfred::json::write_items(io::stdout(), &[item])
 }
 
 #[derive(Debug, StructOpt)]
@@ -47,6 +63,10 @@ struct Cli {
 
 main!(|args: Cli| {
   let query = &args.query;
-  let request = search_pods(query)?;
-  pod_to_alfred_item(request)?
+  let request = search_pods(query);
+  // let items = pod_to_alfred_item(request, query)
+  match request {
+    Ok(req) => pod_to_alfred_item(req, query)?,
+    Err(_) => no_items(query)?,
+  };
 });

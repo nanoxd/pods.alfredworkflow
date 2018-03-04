@@ -4,8 +4,12 @@ pub struct SearchResponse {
 }
 
 impl SearchResponse {
-  pub fn into_allocation(&mut self) -> Allocation {
-    self.allocations.remove(0)
+  pub fn into_allocation(&mut self) -> Option<Allocation> {
+    if self.allocations.is_empty() {
+      None
+    } else {
+      Some(self.allocations.remove(0))
+    }
   }
 }
 
