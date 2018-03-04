@@ -56,6 +56,14 @@ fn no_items(query: &str) -> io::Result<()> {
   alfred::json::write_items(io::stdout(), &[item])
 }
 
+fn placeholder_item() -> io::Result<()> {
+  let item = ItemBuilder::new("Search for your favorite pods")
+    .arg("https://cocoapods.org")
+    .into_item();
+
+  alfred::json::write_items(io::stdout(), &[item])
+}
+
 #[derive(Debug, StructOpt)]
 struct Cli {
   query: String,
@@ -63,10 +71,15 @@ struct Cli {
 
 main!(|args: Cli| {
   let query = &args.query;
-  let request = search_pods(query);
-  // let items = pod_to_alfred_item(request, query)
-  match request {
-    Ok(req) => pod_to_alfred_item(req, query)?,
-    Err(_) => no_items(query)?,
-  };
+
+  if query.is_empty() {
+    placeholder_item()?
+  } else {
+    let request = search_pods(query);
+
+    match request {
+      Ok(req) => pod_to_alfred_item(req, query)?,
+      Err(_) => no_items(query)?,
+    };
+  }
 });
