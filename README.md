@@ -2,6 +2,8 @@
 
 A Workflow for searching through CocoaPods on Alfred
 
+![](usage.png)
+
 ## Install
 
 Download [pods.alfredworkflow](https://github.com/nanoxd/pods.alfredworkflow/releases/latest)
