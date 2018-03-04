@@ -34,6 +34,10 @@ pub struct Pod {
 }
 
 impl Pod {
+  pub fn title(&self) -> String {
+    format!("{} ({})", self.id, self.version)
+  }
+
   pub fn url(&self) -> String {
     format!("https://cocoapods.org/pods/{}", self.id)
   }
@@ -89,5 +93,11 @@ mod tests {
   fn test_pod_stanza() {
     let pod = test_pod();
     assert_eq!(pod.stanza(), "pod 'RxSwift', '~> 4.2.0'");
+  }
+
+  #[test]
+  fn test_pod_title() {
+    let pod = test_pod();
+    assert_eq!(pod.title(), "RxSwift (4.2.0)");
   }
 }
