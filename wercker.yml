@@ -4,4 +4,4 @@ build:
     - script:
         name: test
         code: |
-          cargo test
+          cargo test --color always
