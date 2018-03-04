@@ -1,0 +1,7 @@
+box: rust
+build:
+  steps:
+    - script:
+        name: test
+        code: |
+          cargo test --color always
