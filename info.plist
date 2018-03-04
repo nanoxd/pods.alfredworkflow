@@ -4,6 +4,8 @@
 <dict>
 	<key>bundleid</key>
 	<string>xyz.pixelgala.alfred.workflow.alfred-pods</string>
+	<key>category</key>
+	<string>Tools</string>
 	<key>connections</key>
 	<dict>
 		<key>49C02495-F306-4579-A935-DF6BB328A3E9</key>
@@ -117,6 +119,6 @@
 		</dict>
 	</dict>
 	<key>webaddress</key>
-	<string>https://github.com/nanoxd/alfred-pods.alfredworkflow</string>
+	<string>https://github.com/nanoxd/pods.alfredworkflow</string>
 </dict>
 </plist>
