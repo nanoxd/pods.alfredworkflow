@@ -48,17 +48,46 @@ pub struct Source {
   pub git: String,
 }
 
-#[test]
-fn test_into_allocation() {
-  let mut response = SearchResponse::default();
-  assert!(response.into_allocation().is_none());
+#[cfg(test)]
+mod tests {
+  use super::*;
 
-  let mut valid_response = SearchResponse {
-    allocations: vec![Allocation("".to_string(), 0.0, 0, vec![], vec![], vec![])],
-  };
+  fn test_pod() -> Pod {
+    Pod {
+      id: "RxSwift".to_string(),
+      version: "4.2.0".to_string(),
+      summary: "RxSwift is a ReactiveX ...".to_string(),
+      link: "https://github.com/ReactiveX/RxSwift".to_string(),
+      source: Source {
+        git: "https://github.com/ReactiveX/RxSwift".to_string(),
+      },
+    }
+  }
 
-  let allocation = valid_response.into_allocation();
-  assert!(allocation.is_some());
-  let allocation = allocation.unwrap();
-  assert!(allocation.pods().is_empty());
+  #[test]
+  fn test_into_allocation() {
+    let mut response = SearchResponse::default();
+    assert!(response.into_allocation().is_none());
+
+    let mut valid_response = SearchResponse {
+      allocations: vec![Allocation("".to_string(), 0.0, 0, vec![], vec![], vec![])],
+    };
+
+    let allocation = valid_response.into_allocation();
+    assert!(allocation.is_some());
+    let allocation = allocation.unwrap();
+    assert!(allocation.pods().is_empty());
+  }
+
+  #[test]
+  fn test_pod_url() {
+    let pod = test_pod();
+    assert_eq!(pod.url(), "https://cocoapods.org/pods/RxSwift");
+  }
+
+  #[test]
+  fn test_pod_stanza() {
+    let pod = test_pod();
+    assert_eq!(pod.stanza(), "pod 'RxSwift', '~> 4.2.0'");
+  }
 }
