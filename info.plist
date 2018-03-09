@@ -71,9 +71,9 @@
 				<key>queuedelayimmediatelyinitially</key>
 				<true/>
 				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
 				<integer>1</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
 				<key>runningsubtext</key>
 				<string>Please Wait</string>
 				<key>script</key>
